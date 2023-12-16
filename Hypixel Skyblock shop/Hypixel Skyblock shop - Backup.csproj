@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <RootNamespace>Hypixel_Skyblock_shop</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Monocraft.ttf" x />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Fonts\Monocraft.ttf" x>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="RestSharp" Version="110.2.0" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
+    <PackageReference Include="System.Runtime.Caching" Version="8.0.0" />
+  </ItemGroup>
+
+</Project>

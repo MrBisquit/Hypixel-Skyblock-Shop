@@ -1,0 +1,26 @@
+﻿<Window x:Class="Hypixel_Skyblock_shop.Settings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Hypixel_Skyblock_shop"
+        mc:Ignorable="d"
+        Title="Settings" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0">
+            <DockPanel>
+                <Label DockPanel.Dock="Left">Hypixel API Key: </Label>
+                <TextBox DockPanel.Dock="Right" VerticalAlignment="Center" Name="APIKey"></TextBox>
+            </DockPanel>
+        </StackPanel>
+
+        <Rectangle Grid.Row="1" Fill="#E6E6E6"></Rectangle>
+        <WrapPanel Grid.Row="1" HorizontalAlignment="Right">
+            <Button Name="SaveButton" Click="SaveButton_Click">Save</Button>
+        </WrapPanel>
+    </Grid>
+</Window>
