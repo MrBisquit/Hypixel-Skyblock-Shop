@@ -27,7 +27,8 @@
 
         <Menu Grid.Row="1" Background="#E9E9E9">
             <MenuItem Header="Transactions">
-                <MenuItem Header="New transaction"></MenuItem>
+                <MenuItem Header="New transaction" Name="NT" Click="NT_Click"></MenuItem>
+                <MenuItem Header="End transaction" Name="ET" Click="ET_Click"></MenuItem>
             </MenuItem>
         </Menu>
     </Grid>

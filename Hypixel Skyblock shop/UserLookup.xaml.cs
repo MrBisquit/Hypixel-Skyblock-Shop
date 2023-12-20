@@ -76,5 +76,13 @@ namespace Hypixel_Skyblock_shop
             Globals.mainWindow.LoadPage(user);
             Close();
         }
+
+        private void NT_Click(object sender, RoutedEventArgs e)
+        {
+            Pages.ViewUser user = new Pages.ViewUser(Username.Text);
+            Globals.mainWindow.LoadPage(user);
+            user.NewTransaction();
+            Close();
+        }
     }
 }

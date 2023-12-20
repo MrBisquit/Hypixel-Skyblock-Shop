@@ -31,7 +31,7 @@
                 <TextBlock Name="UUID"></TextBlock>
                 <DockPanel>
                     <Button Name="VU" Click="VU_Click">View user</Button>
-                    <Button>New transaction</Button>
+                    <Button Name="NT" Click="NT_Click">New transaction</Button>
                 </DockPanel>
             </StackPanel>
         </Grid>

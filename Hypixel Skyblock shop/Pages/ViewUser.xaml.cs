@@ -24,6 +24,14 @@ namespace Hypixel_Skyblock_shop.Pages
     public partial class ViewUser : Page
     {
         string username = "";
+
+        double oldx = 0;
+        double oldy = 0;
+        double oldwidth = 0;
+        double oldheight = 0;
+        bool wasMaximised = false;
+
+        Windows.TransactionItems transactionItems;
         public ViewUser(string username)
         {
             InitializeComponent();
@@ -75,6 +83,91 @@ namespace Hypixel_Skyblock_shop.Pages
         private void S_Click(object sender, RoutedEventArgs e)
         {
             Globals.mainWindow.LoadPage(new Stats());
+        }
+
+        public void NewTransaction()
+        {
+            if (Globals.mainWindow.WindowState == WindowState.Maximized)
+            {
+                wasMaximised = true;
+                Globals.mainWindow.WindowState = WindowState.Normal;
+            }
+            else
+            {
+                wasMaximised = false;
+            }
+
+            oldx = Globals.mainWindow.Left;
+            oldy = Globals.mainWindow.Top;
+            oldwidth = Globals.mainWindow.Width;
+            oldheight = Globals.mainWindow.Height;
+
+            Globals.mainWindow.Width = 800;
+            Globals.mainWindow.Height = 450;
+            Globals.mainWindow.ResizeMode = ResizeMode.CanMinimize;
+
+            transactionItems = new Windows.TransactionItems();
+            transactionItems.Show();
+            transactionItems.Left = Globals.mainWindow.Left + 812;
+            transactionItems.Top = Globals.mainWindow.Top;
+            transactionItems.ShowInTaskbar = false;
+
+            Globals.mainWindow.LocationChanged += MainLocationChanged;
+            transactionItems.LocationChanged += ItemsLocationChanged;
+        }
+        
+        public void EndTransaction()
+        {
+            Globals.mainWindow.Left = oldx;
+            Globals.mainWindow.Top = oldy;
+            Globals.mainWindow.Width = oldwidth;
+            Globals.mainWindow.Height = oldheight;
+
+            if (wasMaximised)
+            {
+                Globals.mainWindow.WindowState = WindowState.Maximized;
+            }
+
+            Globals.mainWindow.ResizeMode = ResizeMode.CanResize;
+
+            transactionItems.Close();
+
+            Globals.mainWindow.LocationChanged -= MainLocationChanged;
+            transactionItems = null;
+        }
+
+        bool isAMoving = false;
+        bool isBMoving = false;
+
+        public async void MainLocationChanged(object sender, EventArgs e)
+        {
+            if (isBMoving) return;
+            isAMoving = true;
+            transactionItems.Left = Globals.mainWindow.Left + 812;
+            transactionItems.Top = Globals.mainWindow.Top;
+
+            await Task.Delay(1);
+            isAMoving = false;
+        }
+        public async void ItemsLocationChanged(object sender, EventArgs e)
+        {
+            if (isAMoving) return;
+            isBMoving = true;
+            Globals.mainWindow.Left = transactionItems.Left - 812;
+            Globals.mainWindow.Top = transactionItems.Top;
+
+            await Task.Delay(1);
+            isBMoving = false;
+        }
+
+        private void NT_Click(object sender, RoutedEventArgs e)
+        {
+            NewTransaction();
+        }
+
+        private void ET_Click(object sender, RoutedEventArgs e)
+        {
+            EndTransaction();
         }
     }
 }
