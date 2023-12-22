@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Hypixel_Skyblock_shop.Functions;
+using Ookii.Dialogs.Wpf;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -24,6 +27,7 @@ namespace Hypixel_Skyblock_shop.Pages
     public partial class ViewUser : Page
     {
         string username = "";
+        string TransactionUUID = "";
 
         double oldx = 0;
         double oldy = 0;
@@ -32,11 +36,26 @@ namespace Hypixel_Skyblock_shop.Pages
         bool wasMaximised = false;
 
         Windows.TransactionItems transactionItems;
-        public ViewUser(string username)
+        VIewUserSubpages.Transaction transactionSubPage;
+        public ViewUser(string username, string UUID)
         {
             InitializeComponent();
             this.username = username;
             ReloadInformation();
+
+            if(!Globals.users.users.Contains(new Types.User()
+            {
+                Username = username,
+                UUID = UUID
+            }))
+            {
+                Globals.users.users.Add(new Types.User()
+                {
+                    Username = username,
+                    UUID = UUID
+                });
+                SaveUsers.Save(Globals.users);
+            }
         }
 
         private async void ReloadInformation()
@@ -87,6 +106,9 @@ namespace Hypixel_Skyblock_shop.Pages
 
         public void NewTransaction()
         {
+            if (transactionItems != null) return;
+            TransactionUUID = Guid.NewGuid().ToString();
+
             if (Globals.mainWindow.WindowState == WindowState.Maximized)
             {
                 wasMaximised = true;
@@ -113,11 +135,44 @@ namespace Hypixel_Skyblock_shop.Pages
             transactionItems.ShowInTaskbar = false;
 
             Globals.mainWindow.LocationChanged += MainLocationChanged;
+            Globals.mainWindow.Closing += MainClosing;
             transactionItems.LocationChanged += ItemsLocationChanged;
+            transactionItems.Closing += ItemsClosing;
+
+            transactionSubPage = new VIewUserSubpages.Transaction(TransactionUUID);
+            MainContent.Content = transactionSubPage.Content;
         }
         
-        public void EndTransaction()
+        public bool? EndTransaction()
         {
+            if (transactionItems == null) return null;
+
+            TaskDialog td = new TaskDialog()
+            {
+                WindowTitle = "Hypixel Skyblock Shop - Cancel transaction?",
+                Content = $"Are you sure you would like to cancel the transaction {TransactionUUID} for {username}?",
+                AllowDialogCancellation = false,
+            };
+
+            TaskDialogButton yes = new TaskDialogButton()
+            {
+                Text = "Yes"
+            };
+
+            TaskDialogButton no = new TaskDialogButton()
+            {
+                Text = "Cancel"
+            };
+
+            td.Buttons.Add(yes);
+            td.Buttons.Add(no);
+
+            TaskDialogButton result = td.ShowDialog();
+            if(result == no)
+            {
+                return false;
+            }
+
             Globals.mainWindow.Left = oldx;
             Globals.mainWindow.Top = oldy;
             Globals.mainWindow.Width = oldwidth;
@@ -130,10 +185,19 @@ namespace Hypixel_Skyblock_shop.Pages
 
             Globals.mainWindow.ResizeMode = ResizeMode.CanResize;
 
-            transactionItems.Close();
+            try
+            {
+                transactionItems.Close();
+            } catch { }
 
             Globals.mainWindow.LocationChanged -= MainLocationChanged;
+            Globals.mainWindow.Closing -= MainClosing;
             transactionItems = null;
+
+            MainContent.Content = null;
+            transactionSubPage = null;
+
+            return true;
         }
 
         bool isAMoving = false;
@@ -146,6 +210,9 @@ namespace Hypixel_Skyblock_shop.Pages
             transactionItems.Left = Globals.mainWindow.Left + 812;
             transactionItems.Top = Globals.mainWindow.Top;
 
+            oldx = Globals.mainWindow.Left;
+            oldy = Globals.mainWindow.Top;
+
             await Task.Delay(1);
             isAMoving = false;
         }
@@ -156,8 +223,24 @@ namespace Hypixel_Skyblock_shop.Pages
             Globals.mainWindow.Left = transactionItems.Left - 812;
             Globals.mainWindow.Top = transactionItems.Top;
 
+            oldx = Globals.mainWindow.Left;
+            oldy = Globals.mainWindow.Top;
+
             await Task.Delay(1);
             isBMoving = false;
+        }
+
+        public void MainClosing(object sender, CancelEventArgs e)
+        {
+            transactionItems.Closing -= ItemsClosing;
+            bool? result = EndTransaction();
+            if (result == false) { e.Cancel = true; transactionItems.Closing += ItemsClosing; }
+        }
+
+        public void ItemsClosing(object sender, CancelEventArgs e)
+        {
+            bool? result = EndTransaction();
+            if (result == false) e.Cancel = true;
         }
 
         private void NT_Click(object sender, RoutedEventArgs e)

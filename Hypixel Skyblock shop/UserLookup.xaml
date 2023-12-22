@@ -28,7 +28,7 @@
 
             <StackPanel Grid.Column="1">
                 <TextBlock Name="Username" FontFamily="{StaticResource Monocraft}" FontSize="25">Username</TextBlock>
-                <TextBlock Name="UUID"></TextBlock>
+                <TextBlock Name="UUID" FontSize="11"></TextBlock>
                 <DockPanel>
                     <Button Name="VU" Click="VU_Click">View user</Button>
                     <Button Name="NT" Click="NT_Click">New transaction</Button>

@@ -22,6 +22,7 @@ namespace Hypixel_Skyblock_shop
         {
             InitializeComponent();
             Globals.mainWindow = this;
+            Globals.users = SaveUsers.Load();
 
             SaveSettings.Load();
 

@@ -10,5 +10,6 @@ namespace Hypixel_Skyblock_shop
     {
         public static MainWindow mainWindow;
         public static Types.Settings settings;
+        public static Types.Users users;
     }
 }

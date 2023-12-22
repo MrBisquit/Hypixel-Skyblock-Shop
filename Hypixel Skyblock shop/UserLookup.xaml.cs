@@ -20,6 +20,8 @@ namespace Hypixel_Skyblock_shop
             LoadAPI();
         }
 
+        string UUIDText = "";
+
         private void LoadAPI()
         {
 
@@ -27,7 +29,27 @@ namespace Hypixel_Skyblock_shop
 
         private async void ReloadInformation()
         {
+            BitmapImage empty = new BitmapImage();
+            Avatar.Source = empty;
+
             Username.Text = UsernameInput.Text;
+
+            MojangAPI.Mojang mojang = new MojangAPI.Mojang();
+            try
+            {
+                MojangAPI.Model.PlayerUUID player = await mojang.GetUUID(UsernameInput.Text);
+                UUID.Text = player.UUID;
+                UUIDText = player.UUID;
+                VU.IsEnabled = true;
+                NT.IsEnabled = true;
+            } catch
+            {
+                Username.Text = "?";
+                UUID.Text = "Player not found";
+                VU.IsEnabled = false;
+                NT.IsEnabled = false;
+                return;
+            }
 
             // Bing AI
             try
@@ -72,14 +94,14 @@ namespace Hypixel_Skyblock_shop
 
         private void VU_Click(object sender, RoutedEventArgs e)
         {
-            Pages.ViewUser user = new Pages.ViewUser(Username.Text);
+            Pages.ViewUser user = new Pages.ViewUser(UsernameInput.Text, UUIDText); // Stopped using Username.Text and replaced with UsernameInput.Text instead
             Globals.mainWindow.LoadPage(user);
             Close();
         }
 
         private void NT_Click(object sender, RoutedEventArgs e)
         {
-            Pages.ViewUser user = new Pages.ViewUser(Username.Text);
+            Pages.ViewUser user = new Pages.ViewUser(UsernameInput.Text, UUIDText); // Stopped using Username.Text and replaced with UsernameInput.Text instead
             Globals.mainWindow.LoadPage(user);
             user.NewTransaction();
             Close();

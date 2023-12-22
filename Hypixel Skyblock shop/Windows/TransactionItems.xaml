@@ -5,9 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Hypixel_Skyblock_shop.Windows"
         mc:Ignorable="d"
-        Title="Transaction Items" Height="450" Width="450"
+        Title="Transaction Items Search" Height="450" Width="450"
         ResizeMode="NoResize">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <DockPanel>
+            <Label>Search: </Label>
+            <TextBox VerticalAlignment="Center"></TextBox>
+        </DockPanel>
+
+        <ListBox Grid.Row="1"></ListBox>
+
+        <DockPanel Grid.Row="2">
+            <Button>Add item</Button>
+        </DockPanel>
     </Grid>
 </Window>

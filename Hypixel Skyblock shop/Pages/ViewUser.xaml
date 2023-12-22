@@ -11,7 +11,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
 
         <Rectangle Fill="#E3E3E3" Grid.Row="0"></Rectangle>
@@ -31,5 +31,7 @@
                 <MenuItem Header="End transaction" Name="ET" Click="ET_Click"></MenuItem>
             </MenuItem>
         </Menu>
+
+        <Frame Name="MainContent" Grid.Row="2"></Frame>
     </Grid>
 </Page>
